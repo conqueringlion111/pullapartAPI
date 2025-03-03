@@ -1,0 +1,12 @@
+{
+  "getEnterpriseLocationWithDataProvider"   :     [
+    {
+      "param1"              : "siteTypeID",
+      "paramValue"          : "-1",
+      "myLocation"          : "Atlanta North",
+      "expectedAddress"     : "4416 Buford Hwy",
+      "expectedCity"        : "Norcross"
+    }
+  ]
+
+}
