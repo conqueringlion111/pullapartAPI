@@ -22,13 +22,15 @@ public class TestBase {
         InputStream input = TestBase.class.getClassLoader().getResourceAsStream("apitestconfig.properties");
         testConfig.load(input);
 
-        if (System.getProperty("enterpriseURL") != null) {
-            enterpriseBaseURL = System.getProperty("enterpriseURL");
+        if (System.getProperty("enterprise.env") != null) {
+            enterpriseBaseURL = System.getProperty("enterprise.env");
+            System.out.println("using " + enterpriseBaseURL);
         } else {
             enterpriseBaseURL = testConfig.getProperty("enterpriseBaseURL");
         }
-        if (System.getProperty("inventoryURL") != null ) {
-            inventoryBaseURL = System.getProperty("inventoryURL");
+        if (System.getProperty("inventory.env") != null ) {
+            inventoryBaseURL = System.getProperty("inventory.env");
+            System.out.println("using " + inventoryBaseURL);
         } else {
             inventoryBaseURL = testConfig.getProperty("inventoryBaseURL");
         }
@@ -41,6 +43,5 @@ public class TestBase {
         String fileName = name.substring(name.lastIndexOf(".") + 1).trim();
         return JsonReader.getdata(dataPath.concat(fileName).concat(".json"), method.getName());
     }
-
 
 }
