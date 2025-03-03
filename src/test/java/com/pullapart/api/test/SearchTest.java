@@ -42,8 +42,79 @@ public class SearchTest extends TestBase {
                 .log().all()
                 .statusCode(200)
                 .extract().response();
-
         //If search results are returned, assert that the initially searched make and model are returned
+        int totalObj = searchObj.path("$.size()");
+        if (totalObj > 0) {
+            int totalExact = searchObj.path("[0].exact.size()");
+            for (int i = 0; i < totalExact; ++i) {
+                Map<String, Object> tempData = searchObj.path("[0].exact[" + i + "]");
+                Assert.assertEquals(tempData.get("makeName").toString(), searchedMake, "the initially searched make was not returned");
+                Assert.assertEquals(tempData.get("modelName").toString(), searchedModel, "the searched model was not returned");
+            }
+        }
+    }
+
+    @Test(groups = {"search"}, dataProvider = "dataProvider", description = "test coverage for /Vehicle/Search advanced search" +
+            "using testNG data provider to bring in the test data")
+    public void searchVehicleWithDataProvider(String searchedMake, String searchedModel) throws JsonProcessingException {
+
+        List<Integer> locations = Arrays.asList(4);
+        int MakeID = 29;
+        List<Integer> Models = Arrays.asList(720);
+        List<Integer> Years = Arrays.asList();
+        //Create the search request payload with the above test data
+        String payload = SearchPayload.searchPayload(locations, MakeID, Models, Years);
+        //make the POST search call
+
+        Response searchObj =
+                given()
+                        .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
+                        .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
+                        .body(payload)
+                        .when()
+                        .post(inventoryBaseURL.concat(SEARCH.VEHICLE.path).concat(SEARCH.SEARCH.path))
+                        .then()
+                        .log().all()
+                        .statusCode(200)
+                        .extract().response();
+        //If search results are returned, assert that the initially searched make and model are returned
+        int totalObj = searchObj.path("$.size()");
+        if (totalObj > 0) {
+            int totalExact = searchObj.path("[0].exact.size()");
+            for (int i = 0; i < totalExact; ++i) {
+                Map<String, Object> tempData = searchObj.path("[0].exact[" + i + "]");
+                Assert.assertEquals(tempData.get("makeName").toString(), searchedMake, "the initially searched make was not returned");
+                Assert.assertEquals(tempData.get("modelName").toString(), searchedModel, "the searched model was not returned");
+            }
+        }
+    }
+
+    @Test(groups = {"search"}, description = "test coverage for /Vehicle/Search end point")
+    public void advancedVehiclesearch() throws JsonProcessingException {
+
+        String searchedMake = "INFINITI";
+        String searchedModel = "Q45";
+        int  years = 1994;
+        List<Integer> locations = Arrays.asList(21, 4, 3);
+        int MakeID = 29;
+        List<Integer> Models = Arrays.asList(720);
+        List<Integer> Years = Arrays.asList(years);
+        //Create the search request payload with the above test data
+        String payload = SearchPayload.searchPayload(locations, MakeID, Models, Years);
+        //make the POST search call
+
+        Response searchObj =
+                given()
+                        .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
+                        .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
+                        .body(payload)
+                        .when()
+                        .post(inventoryBaseURL.concat(SEARCH.VEHICLE.path).concat(SEARCH.SEARCH.path))
+                        .then()
+                        .log().all()
+                        .statusCode(200)
+                        .extract().response();
+        //If search results are returned, assert that the initially searched make and model are returned, note exact year match may not be available
         int totalObj = searchObj.path("$.size()");
         if (totalObj > 0) {
             int totalExact = searchObj.path("[0].exact.size()");
