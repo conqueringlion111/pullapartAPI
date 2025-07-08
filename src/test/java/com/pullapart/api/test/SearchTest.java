@@ -145,14 +145,14 @@ public class SearchTest extends TestBase {
         //make the POST search call
         URIFormatter format = new URIFormatter();
         //To see full log
-//        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         Response searchObj =
                 given()
                         .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
                         .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
                         .body(payload)
                         .when()
-                        .post(format.formatUri(inventoryBaseURL, "Vehicle", "Search"))
+                        .post(format.formatUri(inventoryBaseURL, SEARCH.VEHICLE.path.replace("/", ""), SEARCH.SEARCH.path.replace("/", "")))
                         .then()
                         .log().ifValidationFails()
                         .statusCode(200)
