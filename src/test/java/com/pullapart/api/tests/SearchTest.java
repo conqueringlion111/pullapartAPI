@@ -1,7 +1,6 @@
-package com.pullapart.api.test;
+package com.pullapart.api.tests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.pullapart.common.TestBase;
 
 import com.pullapart.endpoint.SEARCH;
 import com.pullapart.helper.URIFormatter;
@@ -27,10 +26,10 @@ public class SearchTest extends TestBase {
 
         String searchedMake = "INFINITI";
         String searchedModel = "Q45";
-        List<Integer> locations = Arrays.asList(4);
+        List<Integer> locations = List.of(4);
         int MakeID = 29;
-        List<Integer> Models = Arrays.asList(720);
-        List<Integer> Years = Arrays.asList();
+        List<Integer> Models = List.of(720);
+        List<Integer> Years = List.of();
         //Create the search request payload with the above test data
         String payload = SearchPayload.searchPayload(locations, MakeID, Models, Years);
         //make the POST search call
@@ -62,10 +61,10 @@ public class SearchTest extends TestBase {
             "using testNG data provider to bring in the test data")
     public void searchVehicleWithDataProvider(String searchedMake, String searchedModel) throws JsonProcessingException {
 
-        List<Integer> locations = Arrays.asList(4);
+        List<Integer> locations = List.of(4);
         int MakeID = 29;
-        List<Integer> Models = Arrays.asList(720);
-        List<Integer> Years = Arrays.asList();
+        List<Integer> Models = List.of(720);
+        List<Integer> Years = List.of();
         //Create the search request payload with the above test data
         String payload = SearchPayload.searchPayload(locations, MakeID, Models, Years);
         //make the POST search call
@@ -101,8 +100,8 @@ public class SearchTest extends TestBase {
         int  years = 1994;
         List<Integer> locations = Arrays.asList(21, 4, 3);
         int MakeID = 29;
-        List<Integer> Models = Arrays.asList(720);
-        List<Integer> Years = Arrays.asList(years);
+        List<Integer> Models = List.of(720);
+        List<Integer> Years = List.of(years);
         //Create the search request payload with the above test data
         String payload = SearchPayload.searchPayload(locations, MakeID, Models, Years);
         //make the POST search call
@@ -128,6 +127,9 @@ public class SearchTest extends TestBase {
                 Assert.assertEquals(tempData.get("modelName").toString(), searchedModel, "the searched model was not returned");
             }
         }
+
+        //To assert no cookies are returned
+        Assert.assertTrue(searchObj.getCookies().isEmpty());
     }
 
     @Test(groups = {"search"}, description = "test coverage for /Vehicle/Search end point using URI Formatter")
@@ -138,8 +140,8 @@ public class SearchTest extends TestBase {
         int  years = 1994;
         List<Integer> locations = Arrays.asList(21, 4, 3);
         int MakeID = 29;
-        List<Integer> Models = Arrays.asList(720);
-        List<Integer> Years = Arrays.asList(years);
+        List<Integer> Models = List.of(720);
+        List<Integer> Years = List.of(years);
         //Create the search request payload with the above test data
         String payload = SearchPayload.searchPayload(locations, MakeID, Models, Years);
         //make the POST search call
@@ -148,6 +150,7 @@ public class SearchTest extends TestBase {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         Response searchObj =
                 given()
+                        .urlEncodingEnabled(false)
                         .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
                         .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
                         .body(payload)

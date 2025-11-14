@@ -7,6 +7,11 @@
       "expectedAddress"     : "4416 Buford Hwy",
       "expectedCity"        : "Norcross"
     }
+  ],
+  "validateLocationIDAtlantaNorthV2"    :     [
+    {
+      "param1"              : "siteTypeID",
+      "paramValue"          : "-1"
+    }
   ]
-
 }
