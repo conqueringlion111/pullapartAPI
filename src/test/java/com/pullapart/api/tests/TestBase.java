@@ -1,4 +1,4 @@
-package com.pullapart.common;
+package com.pullapart.api.tests;
 
 import com.pullapart.utils.JsonReader;
 import org.testng.annotations.BeforeSuite;
@@ -14,12 +14,11 @@ public class TestBase {
 
     protected static String enterpriseBaseURL = "";
     protected static String inventoryBaseURL = "";
-    private final String dataPath = "src/main/java/com/pullapart/dataprovider/";
 
     @BeforeSuite(alwaysRun = true)
-    public void beforSuite() throws IOException {
+    public void setUp() throws IOException {
         Properties testConfig = new Properties();
-        InputStream input = TestBase.class.getClassLoader().getResourceAsStream("apitestconfig.properties");
+        InputStream input = TestBase.class.getClassLoader().getResourceAsStream("config/apitestconfig.properties");
         testConfig.load(input);
 
         if (System.getProperty("enterprise.env") != null) {
@@ -37,11 +36,9 @@ public class TestBase {
     }
 
     @DataProvider(name = "dataProvider")
-    public Object[][] passData(Method method) throws IOException
-    {
-        String name = getClass().getName();
-        String fileName = name.substring(name.lastIndexOf(".") + 1).trim();
-        return JsonReader.getdata(dataPath.concat(fileName).concat(".json"), method.getName());
+    public Object[][] passData(Method method) throws Exception {
+        String className = this.getClass().getSimpleName();
+        String filePath = "src/main/java/com/pullapart/dataprovider/" + className + ".json";
+        return JsonReader.getData(filePath, method);
     }
-
 }

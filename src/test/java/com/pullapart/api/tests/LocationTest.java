@@ -1,9 +1,10 @@
-package com.pullapart.api.test;
-
-import com.pullapart.common.TestBase;
+package com.pullapart.api.tests;
 
 import com.pullapart.endpoint.LOCATION;
 import com.pullapart.properties.AppConstants;
+import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.Assert;
@@ -81,4 +82,58 @@ public class LocationTest extends TestBase {
         }
         Assert.assertTrue(locationFound, "expected location was not returned");
     }
+
+    @Test(groups = {"location"}, description = "test coverage for /location end point data validation Atlanta North ID")
+    public void validateLocationIDAtlantaNorth() {
+        Response locationObj =
+                given()
+                        .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
+                        .param("siteTypeID", "-1")
+                        .when()
+                        .get(enterpriseBaseURL.concat(LOCATION.LOCATION.path))
+                        .then()
+                        .log().ifValidationFails()
+                        .statusCode(200)
+                        .extract().response();
+        //Assert expected location ID was returned for Atlanta North location
+        boolean locationFound = false;
+        int totalObjCount = locationObj.path("$.size()");
+        for (int i = 0; i < totalObjCount; ++i) {
+            Map<String, Object> tempData = locationObj.path("[" + i + "]");
+            if (tempData.get("locationName").toString().equals("Atlanta North")) {
+                locationFound = true;
+                Assert.assertEquals(tempData.get("locationID").toString(), "4", "expected location ID not returned");
+                break;
+            }
+        }
+        Assert.assertTrue(locationFound, "expected location was not returned");
+    }
+
+    @Test(groups = {"location"}, dataProvider = "dataProvider", description = "test coverage for /location end point data validation Atlanta North ID")
+    public void validateLocationIDAtlantaNorthV2(String param1, String paramValue) {
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        Response locationObj =
+                given()
+                        .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
+                        .param(param1, paramValue)
+                        .when()
+                        .get(enterpriseBaseURL.concat(LOCATION.LOCATION.path))
+                        .then()
+                        .log().ifValidationFails()
+                        .statusCode(200)
+                        .extract().response();
+        //Assert expected location ID was returned for Atlanta North location
+        boolean locationFound = false;
+        int totalObjCount = locationObj.path("$.size()");
+        for (int i = 0; i < totalObjCount; ++i) {
+            Map<String, Object> tempData = locationObj.path("[" + i + "]");
+            if (tempData.get("locationName").toString().equals("Atlanta North")) {
+                locationFound = true;
+                Assert.assertEquals(tempData.get("locationID").toString(), "4", "expected location ID not returned");
+                break;
+            }
+        }
+        Assert.assertTrue(locationFound, "expected location was not returned");
+    }
+
 }

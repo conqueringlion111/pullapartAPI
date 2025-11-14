@@ -9,34 +9,48 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Map;
 
 public class JsonReader {
-    public static Object[][] getdata(String JSON_path, String typeData)
-            throws JsonIOException, JsonSyntaxException, FileNotFoundException {
-        JsonParser jsonParser = new JsonParser();
-        JsonObject jsonObj = jsonParser.parse(new FileReader(JSON_path)).getAsJsonObject();
-        JsonArray array = (JsonArray) jsonObj.get(typeData);
-        return searchJsonElement(array);
-    }
+    public static Object[][] getData(String jsonPath, Method method) throws FileNotFoundException {
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(new FileReader(jsonPath)).getAsJsonObject();
 
-    private static Object[][] searchJsonElement(JsonArray jsonArray) throws NullPointerException {
-        int jsonRowCount = jsonArray.size();
-        int jsonElementCount = 0;
-        for (JsonElement jsonElement : jsonArray) {
-            jsonElementCount = jsonElement.getAsJsonObject().entrySet().size();
+        JsonArray testArray = jsonObject.getAsJsonArray(method.getName());
+        if (testArray == null) {
+            throw new RuntimeException("No test data found for test: " + method.getName());
         }
-        Object[][] dataSet = new Object[jsonRowCount][jsonElementCount];
-        int i = 0;
-        int j = 0;
-        for (JsonElement jsonElement : jsonArray) {
-            for (Map.Entry<String, JsonElement> entry : jsonElement.getAsJsonObject().entrySet()) {
-                dataSet[i][j] = entry.getValue().getAsString();
-                j++;
+
+        Parameter[] parameters = method.getParameters();
+        Object[][] dataSet = new Object[testArray.size()][parameters.length];
+
+        for (int i = 0; i < testArray.size(); i++) {
+            JsonObject rowObject = testArray.get(i).getAsJsonObject();
+            for (int j = 0; j < parameters.length; j++) {
+                String paramName = parameters[j].getName(); // Must be compiled with -parameters
+                JsonElement value = rowObject.get(paramName);
+
+                if (value == null) {
+                    throw new RuntimeException("Missing value for parameter '" + paramName + "' in test data row " + i);
+                }
+
+                // Map JSON value to Java type
+                if (parameters[j].getType() == String.class) {
+                    dataSet[i][j] = value.getAsString();
+                } else if (parameters[j].getType() == int.class || parameters[j].getType() == Integer.class) {
+                    dataSet[i][j] = value.getAsInt();
+                } else if (parameters[j].getType() == boolean.class || parameters[j].getType() == Boolean.class) {
+                    dataSet[i][j] = value.getAsBoolean();
+                } else if (parameters[j].getType() == double.class || parameters[j].getType() == Double.class) {
+                    dataSet[i][j] = value.getAsDouble();
+                } else {
+                    dataSet[i][j] = value.toString(); // fallback
+                }
             }
-            i++;
-            j = 0;
         }
+
         return dataSet;
     }
 }
