@@ -1,10 +1,10 @@
 package com.pullapart.endpoint;
 
-public enum MAKE {
+public enum Make {
     MAKE("/Make");
     public final String path;
 
-    MAKE(String path) {
+    Make(String path) {
         this.path = path;
     }
 }
