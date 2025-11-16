@@ -1,11 +1,14 @@
 package com.pullapart.endpoint;
 
-public enum LOCATION {
-    LOCATION("/Location");
+public enum Search {
+
+    VEHICLE("/Vehicle"),
+    SEARCH("/Search");
 
     public final String path;
 
-    LOCATION(String path) {
+    Search(String path) {
         this.path = path;
     }
+
 }

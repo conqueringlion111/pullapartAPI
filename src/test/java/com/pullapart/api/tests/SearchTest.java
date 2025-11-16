@@ -2,7 +2,7 @@ package com.pullapart.api.tests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import com.pullapart.endpoint.SEARCH;
+import com.pullapart.endpoint.Search;
 import com.pullapart.helper.URIFormatter;
 import com.pullapart.payload.SearchPayload;
 import com.pullapart.properties.AppConstants;
@@ -40,7 +40,7 @@ public class SearchTest extends TestBase {
                 .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
                 .body(payload)
                 .when()
-                .post(inventoryBaseURL.concat(SEARCH.VEHICLE.path).concat(SEARCH.SEARCH.path))
+                .post(inventoryBaseURL.concat(Search.VEHICLE.path).concat(Search.SEARCH.path))
                 .then()
                 .log().all()
                 .statusCode(200)
@@ -75,7 +75,7 @@ public class SearchTest extends TestBase {
                         .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
                         .body(payload)
                         .when()
-                        .post(inventoryBaseURL.concat(SEARCH.VEHICLE.path).concat(SEARCH.SEARCH.path))
+                        .post(inventoryBaseURL.concat(Search.VEHICLE.path).concat(Search.SEARCH.path))
                         .then()
                         .log().all()
                         .statusCode(200)
@@ -112,7 +112,7 @@ public class SearchTest extends TestBase {
                         .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
                         .body(payload)
                         .when()
-                        .post(inventoryBaseURL.concat(SEARCH.VEHICLE.path).concat(SEARCH.SEARCH.path))
+                        .post(inventoryBaseURL.concat(Search.VEHICLE.path).concat(Search.SEARCH.path))
                         .then()
                         .log().all()
                         .statusCode(200)
@@ -155,7 +155,7 @@ public class SearchTest extends TestBase {
                         .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
                         .body(payload)
                         .when()
-                        .post(format.formatUri(inventoryBaseURL, SEARCH.VEHICLE.path.replace("/", ""), SEARCH.SEARCH.path.replace("/", "")))
+                        .post(format.formatUri(inventoryBaseURL, Search.VEHICLE.path.replace("/", ""), Search.SEARCH.path.replace("/", "")))
                         .then()
                         .log().ifValidationFails()
                         .statusCode(200)

@@ -14,6 +14,7 @@ public class TestBase {
 
     protected static String enterpriseBaseURL = "";
     protected static String inventoryBaseURL = "";
+    protected static String baseURLOrigin = "";
 
     @BeforeSuite(alwaysRun = true)
     public void setUp() throws IOException {
@@ -32,6 +33,12 @@ public class TestBase {
             System.out.println("using " + inventoryBaseURL);
         } else {
             inventoryBaseURL = testConfig.getProperty("inventoryBaseURL");
+        }
+        if (System.getProperty("origin.env") != null ) {
+            baseURLOrigin = System.getProperty("origin.env");
+            System.out.println("using " + baseURLOrigin);
+        } else {
+            baseURLOrigin = testConfig.getProperty("baseURLOrigin");
         }
     }
 

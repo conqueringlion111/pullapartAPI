@@ -1,6 +1,6 @@
 package com.pullapart.api.tests;
 
-import com.pullapart.endpoint.LOCATION;
+import com.pullapart.endpoint.Location;
 import com.pullapart.properties.AppConstants;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -30,7 +30,7 @@ public class LocationTest extends TestBase {
                 .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
                 .param(param1, paramValue)
                 .when()
-                .get(enterpriseBaseURL.concat(LOCATION.LOCATION.path))
+                .get(enterpriseBaseURL.concat(Location.LOCATION.path))
                 .then()
                 .log().ifValidationFails()
                 .statusCode(200)
@@ -61,7 +61,7 @@ public class LocationTest extends TestBase {
                         .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
                         .param(param1, paramValue)
                         .when()
-                        .get(enterpriseBaseURL.concat(LOCATION.LOCATION.path))
+                        .get(enterpriseBaseURL.concat(Location.LOCATION.path))
                         .then()
                         .log().ifValidationFails()
                         .statusCode(200)
@@ -90,7 +90,7 @@ public class LocationTest extends TestBase {
                         .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
                         .param("siteTypeID", "-1")
                         .when()
-                        .get(enterpriseBaseURL.concat(LOCATION.LOCATION.path))
+                        .get(enterpriseBaseURL.concat(Location.LOCATION.path))
                         .then()
                         .log().ifValidationFails()
                         .statusCode(200)
@@ -117,7 +117,7 @@ public class LocationTest extends TestBase {
                         .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
                         .param(param1, paramValue)
                         .when()
-                        .get(enterpriseBaseURL.concat(LOCATION.LOCATION.path))
+                        .get(enterpriseBaseURL.concat(Location.LOCATION.path))
                         .then()
                         .log().ifValidationFails()
                         .statusCode(200)

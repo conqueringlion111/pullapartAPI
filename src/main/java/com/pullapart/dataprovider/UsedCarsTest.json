@@ -1,0 +1,11 @@
+{
+  "searchUsedCarsDataProvider"  :   [
+    {
+      "zip"         :   "zipcode",
+      "zipCode"     :   "30074",
+      "target"      :   "targetUrlAtlas",
+      "usedCarLoc"  :   "usedCarLocation",
+      "statusCode"  :   200
+    }
+  ]
+}
