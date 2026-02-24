@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Map;
 
 public class JsonReader {
     public static Object[][] getData(String jsonPath, Method method) throws FileNotFoundException {
@@ -33,7 +32,6 @@ public class JsonReader {
                 if (value == null) {
                     throw new RuntimeException("Missing value for parameter '" + paramName + "' in test data row " + i);
                 }
-
                 // Map JSON value to Java type
                 if (parameters[j].getType() == String.class) {
                     dataSet[i][j] = value.getAsString();
@@ -48,7 +46,6 @@ public class JsonReader {
                 }
             }
         }
-
         return dataSet;
     }
 }
