@@ -16,13 +16,11 @@ import static io.restassured.RestAssured.given;
 
 public class PartsPricingTest extends TestBase {
 
-    @Test(groups = {"partsprice"}, description = "parts price test for alternators")
+    @Test(groups = {"partsprice"}, description = "parts price test for generic and premium alternators")
     public void getPriceForAlternator() {
         String part = "alternator";
         URIFormatter url = new URIFormatter();
-
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-
         Response parts =
         given()
                 .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
@@ -39,6 +37,7 @@ public class PartsPricingTest extends TestBase {
             Assert.assertNotNull(tempData.get("price"));
             Float tempPrice = (Float) tempData.get("price");
             if (tempPrice > 0.00) {
+                // Assert that the price of alternators are either 26.95 (for simple alternator) or 54.95 (premium)
                 Assert.assertTrue(tempPrice.toString().equals("26.95") || tempPrice.toString().equals("54.95"));
             }
         }
