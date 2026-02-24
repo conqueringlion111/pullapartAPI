@@ -1,4 +1,4 @@
-package com.pullapart.payload;
+package com.pullapart.api.payload;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

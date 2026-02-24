@@ -1,7 +1,7 @@
 package com.pullapart.api.tests;
 
-import com.pullapart.endpoint.Location;
-import com.pullapart.properties.AppConstants;
+import com.pullapart.api.endpoint.Location;
+import com.pullapart.api.properties.AppConstants;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -25,6 +25,7 @@ public class LocationTest extends TestBase {
         String expectedAddress = "4416 Buford Hwy";
         String expectedCity = "Norcross";
 
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         Response locationObj =
         given()
                 .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)

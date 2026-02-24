@@ -2,10 +2,10 @@ package com.pullapart.api.tests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import com.pullapart.endpoint.Search;
-import com.pullapart.helper.URIFormatter;
-import com.pullapart.payload.SearchPayload;
-import com.pullapart.properties.AppConstants;
+import com.pullapart.api.endpoint.Search;
+import com.pullapart.api.helper.URIFormatter;
+import com.pullapart.api.payload.SearchPayload;
+import com.pullapart.api.properties.AppConstants;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;

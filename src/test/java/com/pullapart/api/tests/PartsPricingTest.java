@@ -1,8 +1,8 @@
 package com.pullapart.api.tests;
 
-import com.pullapart.endpoint.PartsPrice;
-import com.pullapart.helper.URIFormatter;
-import com.pullapart.properties.AppConstants;
+import com.pullapart.api.endpoint.PartsPrice;
+import com.pullapart.api.helper.URIFormatter;
+import com.pullapart.api.properties.AppConstants;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;

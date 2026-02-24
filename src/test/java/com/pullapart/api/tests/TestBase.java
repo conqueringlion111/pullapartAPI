@@ -1,6 +1,6 @@
 package com.pullapart.api.tests;
 
-import com.pullapart.utils.JsonReader;
+import com.pullapart.api.utils.JsonReader;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 

@@ -1,4 +1,4 @@
-package com.pullapart.endpoint;
+package com.pullapart.api.endpoint;
 
 public enum Search {
 

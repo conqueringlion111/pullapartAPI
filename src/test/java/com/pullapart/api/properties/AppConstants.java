@@ -1,4 +1,4 @@
-package com.pullapart.properties;
+package com.pullapart.api.properties;
 
 public class AppConstants {
 
