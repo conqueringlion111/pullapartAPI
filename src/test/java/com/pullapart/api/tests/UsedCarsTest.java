@@ -1,7 +1,7 @@
 package com.pullapart.api.tests;
 
-import com.pullapart.endpoint.UsedCars;
-import com.pullapart.properties.AppConstants;
+import com.pullapart.api.endpoint.UsedCars;
+import com.pullapart.api.properties.AppConstants;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;

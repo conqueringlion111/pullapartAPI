@@ -1,4 +1,4 @@
-package com.pullapart.helper;
+package com.pullapart.api.helper;
 
 import java.util.StringJoiner;
 
