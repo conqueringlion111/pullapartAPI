@@ -32,8 +32,10 @@ public class SearchTest extends TestBase {
         List<Integer> Years = List.of();
         //Create the search request payload with the above test data
         String payload = SearchPayload.searchPayload(locations, MakeID, Models, Years);
-        //make the POST search call
 
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+
+        //make the POST search call
         Response searchObj =
         given()
                 .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
@@ -56,6 +58,45 @@ public class SearchTest extends TestBase {
             }
         }
     }
+
+    @Test(groups = {"search"}, description = "test coverage for /Vehicle/Search end point")
+    public void searchVehicleWithPoJo() throws JsonProcessingException {
+
+        String searchedMake = "INFINITI";
+        String searchedModel = "Q45";
+        List<Integer> locations = List.of(4);
+        int MakeID = 29;
+        List<Integer> Models = List.of(720);
+        List<Integer> Years = List.of();
+        //Create the search request payload with the above test data
+        String payload = SearchPayload.vehicleSearchPayload(locations, MakeID, Models, Years);
+
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+
+        //make the POST search call
+        Response searchObj =
+                given()
+                        .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
+                        .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
+                        .body(payload)
+                        .when()
+                        .post(inventoryBaseURL.concat(Search.VEHICLE.path).concat(Search.SEARCH.path))
+                        .then()
+                        .log().ifValidationFails()
+                        .statusCode(200)
+                        .extract().response();
+        //If search results are returned, assert that the initially searched make and model are returned
+        int totalObj = searchObj.path("$.size()");
+        if (totalObj > 0) {
+            int totalExact = searchObj.path("[0].exact.size()");
+            for (int i = 0; i < totalExact; ++i) {
+                Map<String, Object> tempData = searchObj.path("[0].exact[" + i + "]");
+                Assert.assertEquals(tempData.get("makeName").toString(), searchedMake, "the initially searched make was not returned");
+                Assert.assertEquals(tempData.get("modelName").toString(), searchedModel, "the searched model was not returned");
+            }
+        }
+    }
+
 
     @Test(groups = {"search"}, dataProvider = "dataProvider", description = "test coverage for /Vehicle/Search advanced search" +
             "using testNG data provider to bring in the test data")
