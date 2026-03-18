@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import com.pullapart.api.endpoint.Search;
 import com.pullapart.api.helper.URIFormatter;
+import com.pullapart.api.model.Vehicle;
 import com.pullapart.api.payload.SearchPayload;
 import com.pullapart.api.properties.AppConstants;
 import io.restassured.RestAssured;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.pullapart.api.payload.SearchPayload.vehicleSearchPayload;
 import static io.restassured.RestAssured.given;
 
 public class SearchTest extends TestBase {
@@ -59,17 +61,17 @@ public class SearchTest extends TestBase {
         }
     }
 
-    @Test(groups = {"search"}, description = "test coverage for /Vehicle/Search end point")
+    @Test(groups = {"search"}, description = "test coverage for /Vehicle/Search end point using vehicle pojo")
     public void searchVehicleWithPoJo() throws JsonProcessingException {
 
         String searchedMake = "INFINITI";
         String searchedModel = "Q45";
         List<Integer> locations = List.of(4);
-        int MakeID = 29;
-        List<Integer> Models = List.of(720);
-        List<Integer> Years = List.of();
-        //Create the search request payload with the above test data
-        String payload = SearchPayload.vehicleSearchPayload(locations, MakeID, Models, Years);
+        int makeId = 29;
+        List<Integer> models = List.of(720);
+        List<Integer> years = List.of();
+        //Create the search request payload with the new pojo class
+        String payload = vehicleSearchPayload(locations, makeId, models, years);
 
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
 
@@ -87,6 +89,43 @@ public class SearchTest extends TestBase {
                         .extract().response();
         //If search results are returned, assert that the initially searched make and model are returned
         int totalObj = searchObj.path("$.size()");
+        if (totalObj > 0) {
+            int totalExact = searchObj.path("[0].exact.size()");
+            for (int i = 0; i < totalExact; ++i) {
+                Map<String, Object> tempData = searchObj.path("[0].exact[" + i + "]");
+                Assert.assertEquals(tempData.get("makeName").toString(), searchedMake, "the initially searched make was not returned");
+                Assert.assertEquals(tempData.get("modelName").toString(), searchedModel, "the searched model was not returned");
+            }
+        }
+    }
+
+    @Test(groups = {"search"}, description = "test coverage for /Vehicle/Search end point passing vehicle pojo into call")
+    public void searchVehicleWithDirectPOJO() {
+
+        String searchedMake = "INFINITI";
+        String searchedModel = "Q45";
+        List<Integer> locations = List.of(4);
+        int makeId = 29;
+        List<Integer> models = List.of(720);
+        List<Integer> years = List.of();
+        //Pass the pojo directly into the request
+        Vehicle payload = new Vehicle(locations, makeId, models, years);
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        //make the POST search call
+        Response searchObj =
+                given()
+                        .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
+                        .header(AppConstants.CONTENT_TYPE, AppConstants.APPLICATION_JSON)
+                        .body(payload)
+                        .when()
+                        .post(inventoryBaseURL.concat(Search.VEHICLE.path).concat(Search.SEARCH.path))
+                        .then()
+                        .log().ifValidationFails()
+                        .statusCode(200)
+                        .extract().response();
+        //If search results are returned, assert that the initially searched make and model are returned
+//        int totalObj = searchObj.path("$.size()");
+        int totalObj = searchObj.jsonPath().getList("$").size();
         if (totalObj > 0) {
             int totalExact = searchObj.path("[0].exact.size()");
             for (int i = 0; i < totalExact; ++i) {

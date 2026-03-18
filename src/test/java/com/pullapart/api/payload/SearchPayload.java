@@ -23,8 +23,8 @@ public class SearchPayload {
         return writer.writeValueAsString(payload);
     }
 
-    public static String vehicleSearchPayload(List<Integer> Locations, int MakeID, List<Integer> Models, List<Integer> Years) throws JsonProcessingException {
-        Vehicle payload = new Vehicle(Locations, MakeID, Models, Years);
+    public static String vehicleSearchPayload(List<Integer> locations, int makeId, List<Integer> models, List<Integer> years) throws JsonProcessingException {
+        Vehicle payload = new Vehicle(locations, makeId, models, years);
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
         return writer.writeValueAsString(payload);
