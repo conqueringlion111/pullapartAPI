@@ -1,5 +1,8 @@
 package com.pullapart.api.tests;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.pullapart.api.model.Locations;
 import com.pullapart.api.endpoint.Location;
 import com.pullapart.api.properties.AppConstants;
 import io.restassured.RestAssured;
@@ -9,6 +12,7 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -86,10 +90,12 @@ public class LocationTest extends TestBase {
 
     @Test(groups = {"location"}, description = "test coverage for /location end point data validation Atlanta North ID")
     public void validateLocationIDAtlantaNorth() {
+
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         Response locationObj =
                 given()
                         .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
-                        .param("siteTypeID", "-1")
+                        .param("siteTypeID", "3")
                         .when()
                         .get(enterpriseBaseURL.concat(Location.LOCATION.path))
                         .then()
@@ -108,6 +114,48 @@ public class LocationTest extends TestBase {
             }
         }
         Assert.assertTrue(locationFound, "expected location was not returned");
+    }
+
+    @Test(groups = {"location"}, description = "test coverage for /location end point data validation deserialize")
+    public void validateLocationIDAtlantaNorDeserialize() {
+
+        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+
+        Response response = given()
+                .header(AppConstants.ACCEPT, AppConstants.APPLICATION_JSON_TEXT_JS_Q_01)
+                .param("siteTypeID", "3")
+                .when()
+                .get(enterpriseBaseURL.concat(Location.LOCATION.path))
+                .then()
+                .log().ifValidationFails()
+                .statusCode(200)
+                .extract().response();
+
+        // Deserialize full array into List<Location>
+        List<Locations> locs = response.jsonPath().getList("", Locations.class);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        try {
+            String jsonOutput = mapper.writeValueAsString(locs);
+            System.out.println(jsonOutput);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println();
+
+        // Filter for "Atlanta North"
+        Locations atlantaNorth = locs.stream()
+                .filter(loc -> "Atlanta North".equals(loc.getLocationName()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Atlanta North not found"));
+
+        // Assertions
+        Assert.assertEquals(atlantaNorth.getLocationID(), 4, "Expected location ID not returned");
+        Assert.assertEquals(atlantaNorth.getCityName(), "Norcross", "City mismatch"); // optional
+        Assert.assertEquals(atlantaNorth.getStateName(), "GA", "State mismatch");     // optional
     }
 
     @Test(groups = {"location"}, dataProvider = "dataProvider", description = "test coverage for /location end point data validation Atlanta North ID")
